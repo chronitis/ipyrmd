@@ -7,41 +7,13 @@ This script provides conversion in both directions between the IPython notebook
 format (JSON with seperate markdown and code) and the R markdown format
 (markdown text with annotated code blocks).
 
-It only really makes sense to use it with IPython notebooks using the R kernel
-(github:IRkernel/IRkernel), but will work with any type of code if you insist.
-
-Conversion is not lossless:
-
- * Inline code blocks in R Markdown (`r somecode`) are currently ignored (they
-   remain as markdown text). Inserting code blocks for them would be a possible
-   extension but since the main use for such blocks is to display an output
-   value I assume ignoring them should not usually change program flow.
- * The YAML header used in R Markdown does not largely have an equivalent in
-   IPython. The contents of the header are stored in the IPython notebook
-   metadata dictionary (as "Rmd_header") for round-trip conversion, but are
-   not otherwise used.
- * Chunk options for R Markdown (```{r, foo=bar}) also do not currently have
-   any functional equivalent in the IPython notebook. The option string (as
-   text) is stored in the cell metadata (as "Rmd_chunk_options") for round-trip
-   conversion.
- * Since whitespace is significant in markdown, we attempt to maintain blank
-   lines within code and markdown blocks, but the boundaries between code and
-   markdown may not be exactly reproduced (you may get extra blank lines).
- * The IPython notebook may contain both text and rich output, but there is no
-   way to keep this for R Markdown - you will need to re-run the document.
-
 TODO:
 
  * Support for R files with embedded markdown (#' markdown, #+ chunkopts)
  * Options for how to handle inline R blocks
  * Consider using nbconvert machinery for ipynb -> Rmd conversion
  * Consider whether any chunk options can be emulated with IRdisplay calls
-
-Version: 0.1 (2015-05-27)
 """
-
-__author__ = "Gordon Ball <gordon@chronitis.net>"
-__version__ = "0.1"
 
 import IPython.nbformat
 import yaml
@@ -209,53 +181,3 @@ def rmd_to_ipynb(infile, outfile):
         IPython.nbformat.write(node, outfile)
 
     return True
-
-
-if __name__ == '__main__':
-    import argparse
-    import sys
-    import pathlib
-
-    parser = argparse.ArgumentParser(description="Convert between IPYNB and RMD formats")
-    parser.add_argument("--to", choices=["ipynb", "Rmd"],
-                        help="Output format (default: inferred from input filename)")
-    parser.add_argument("-o", "--out", type=str,
-                        help="Output filename (default: input filename with switched extension)")
-    parser.add_argument("-y", action="store_true", default=False,
-                        help="Overwrite existing output file")
-    parser.add_argument("filename", help="Input filename")
-
-    args = parser.parse_args()
-
-    if args.to is not None:
-        target = args.to
-    else:
-        if args.filename.lower().endswith("ipynb"):
-            target = "Rmd"
-        elif args.filename.lower().endswith("rmd"):
-            target = "ipynb"
-        else:
-            print("Filename does not end either .ipynb or .Rmd")
-            print("Please specify output format with --to")
-            sys.exit(1)
-
-    path_in = pathlib.Path(args.filename)
-    if not path_in.exists():
-        print('Input filename "{0}" does not exist'.format(path_in))
-        sys.exit(1)
-
-    if args.out is not None:
-        path_out = pathlib.Path(args.out)
-    else:
-        path_out = path_in.with_suffix("." + target)
-
-    if path_out.exists() and not args.y:
-        print('Output filename "{0}" exists (allow overwrite with -y)'.format(path_out))
-        sys.exit(1)
-
-    if target == "Rmd":
-        print("Converting (ipynb->Rmd) {0} to {1}".format(path_in, path_out))
-        ipynb_to_rmd(str(path_in), str(path_out))
-    else:
-        print("Converting (Rmd->ipynb) {0} to {1}".format(path_in, path_out))
-        rmd_to_ipynb(str(path_in), str(path_out))
