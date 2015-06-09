@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
-from ipyrmd import __version__, ipynb_to_rmd, rmd_to_ipynb
+from ipyrmd import __version__, ipynb_to_rmd, rmd_to_ipynb, ipynb_to_spin, spin_to_ipynb
 
 import argparse
 import sys
 import pathlib
 
-parser = argparse.ArgumentParser(description="Convert between IPYNB and RMD formats")
-parser.add_argument("--to", choices=["ipynb", "Rmd"],
-                    help="Output format (default: inferred from input filename)")
+parser = argparse.ArgumentParser(description="Convert between IPYNB (IPython/Jupyter Notebook) and RMarkdown")
+parser.add_argument("--to", choices=["ipynb", "Rmd", "R"],
+                    help="Output format (default: inferred from input or output filename)")
+parser.add_argument("--from", choices=["ipynb", "Rmd", "R"], dest="from_",
+                    help="Source format (default: inferred from input filename)")
 parser.add_argument("-o", "--out", type=str,
                     help="Output filename (default: input filename with switched extension)")
 parser.add_argument("-y", action="store_true", default=False,
@@ -22,35 +24,71 @@ if args.version:
     print("ipyrmd version {0}".format(__version__))
     sys.exit(0)
 
-if args.to is not None:
-    target = args.to
-else:
-    if args.filename.lower().endswith("ipynb"):
+
+def guess_from_path(path):
+    ext = path.suffix.lower()
+    src, target = None, None
+    if ext == ".ipynb":
+        src = "ipynb"
         target = "Rmd"
-    elif args.filename.lower().endswith("rmd"):
+    elif ext == ".rmd":
+        src = "Rmd"
         target = "ipynb"
-    else:
-        print("Filename does not end either .ipynb or .Rmd")
-        print("Please specify output format with --to")
-        sys.exit(1)
+    elif ext == ".r":
+        src = "R"
+        target = "ipynb"
+    return src, target
 
 path_in = pathlib.Path(args.filename)
 if not path_in.exists():
     print('Input filename "{0}" does not exist'.format(path_in))
     sys.exit(1)
 
+src, target = guess_from_path(path_in)
+if args.from_ is not None:
+    src = args.from_
+if args.to is not None:
+    target = args.to
+
+path_out = None
+if src is None:
+    print('Unable to infer input file type for "{0}"'.format(str(path_in)))
+    print("Recognised extensions are .ipynb, .Rmd and .R")
+    print("Please specify input format with --from")
+    sys.exit(1)
+
 if args.out is not None:
     path_out = pathlib.Path(args.out)
-else:
+    if target is None:
+        target, _ = guess_from_path(path_out)
+
+
+if target is None:
+    print("Unable to infer output file type")
+    print("Recognised extensions are .ipynb, .Rmd and .R")
+    print("Please specify output format with --to")
+    sys.exit(1)
+
+if path_out is None:
     path_out = path_in.with_suffix("." + target)
 
 if path_out.exists() and not args.y:
     print('Output filename "{0}" exists (allow overwrite with -y)'.format(path_out))
     sys.exit(1)
 
-if target == "Rmd":
-    print("Converting (ipynb->Rmd) {0} to {1}".format(path_in, path_out))
-    ipynb_to_rmd(str(path_in), str(path_out))
+convert_map = {
+    ("Rmd", "ipynb"): rmd_to_ipynb,
+    ("R", "ipynb"): spin_to_ipynb,
+    ("ipynb", "Rmd"): ipynb_to_rmd,
+    ("ipynb", "R"): ipynb_to_spin
+}
+
+if (src, target) in convert_map:
+    print('Converting ({0}->{1}) "{2}" to "{3}"'.format(src, target,
+                                                        str(path_in),
+                                                        str(path_out)))
+    convert_map[(src, target)](str(path_in), str(path_out))
 else:
-    print("Converting (Rmd->ipynb) {0} to {1}".format(path_in, path_out))
-    rmd_to_ipynb(str(path_in), str(path_out))
+    print('Conversion from {0} to {1} is not implemented'.format(str(path_in),
+                                                                 str(path_out)))
+    sys.exit(1)
