@@ -232,7 +232,9 @@ def rmd_to_ipynb(infile, outfile):
                 celldata = []
                 meta = {}
             else:
-                celldata.append(l.rstrip() + "\n")
+                if len(celldata) > 0:
+                    celldata[-1] = celldata[-1] + "\n"
+                celldata.append(l.rstrip())
 
     if state == CODE or celldata:
         add_cell(state, celldata, **meta)
