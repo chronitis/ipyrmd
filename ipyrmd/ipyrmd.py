@@ -14,7 +14,7 @@ TODO:
  * Consider whether any chunk options can be emulated with IRdisplay calls
 """
 
-import IPython.nbformat
+import nbformat
 import yaml
 import re
 
@@ -58,18 +58,18 @@ def NN_representer(dumper, data):
     return dumper.represent_mapping("tag:yaml.org,2002:map", dict(data),
                                     flow_style=False)
 
-yaml.add_representer(IPython.nbformat.NotebookNode, NN_representer)
+yaml.add_representer(nbformat.NotebookNode, NN_representer)
 
 
 def read_ipynb(infile, header=None):
     with open(infile) as f:
-        node = IPython.nbformat.reader.read(f)
+        node = nbformat.reader.read(f)
 
     # ipynb format 4 is current as of IPython 3.0; update the data structure
     # for consistency if it is an older version
-    ipynb_version = IPython.nbformat.reader.get_version(node)
+    ipynb_version = nbformat.reader.get_version(node)
     if ipynb_version < (4, 0):
-        node = IPython.nbformat.convert(node, 4)
+        node = nbformat.convert(node, 4)
 
     notebook_lang = node.metadata.get('language_info', {}).get('name', None)
     if not notebook_lang == 'R':
@@ -161,7 +161,7 @@ METADATA = dict(kernelspec=dict(display_name="R", language="R", name="ir"),
 
 
 def rmd_to_ipynb(infile, outfile):
-    NN = IPython.nbformat.NotebookNode
+    NN = nbformat.NotebookNode
     node = NN(nbformat=4, nbformat_minor=0, metadata=NN(**METADATA), cells=[])
 
     with open(infile) as f:
@@ -232,19 +232,21 @@ def rmd_to_ipynb(infile, outfile):
                 celldata = []
                 meta = {}
             else:
-                celldata.append(l.rstrip() + "\n")
+                if len(celldata) > 0:
+                    celldata[-1] = celldata[-1] + "\n"
+                celldata.append(l.rstrip())
 
     if state == CODE or celldata:
         add_cell(state, celldata, **meta)
 
     with open(outfile, "w") as f:
-        IPython.nbformat.write(node, outfile)
+        nbformat.write(node, outfile)
 
     return True
 
 
 def spin_to_ipynb(infile, outfile):
-    NN = IPython.nbformat.NotebookNode
+    NN = nbformat.NotebookNode
     node = NN(nbformat=4, nbformat_minor=0, metadata=NN(**METADATA), cells=[])
 
     with open(infile) as f:
@@ -323,6 +325,6 @@ def spin_to_ipynb(infile, outfile):
         add_cell(state, celldata, **meta)
 
     with open(outfile, "w") as f:
-        IPython.nbformat.write(node, outfile)
+        nbformat.write(node, outfile)
 
     return True
