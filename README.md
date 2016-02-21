@@ -19,7 +19,7 @@ Conversion should produce useful output, but is not completely lossless:
 Usage
 -----
 
-`python3`, `ipython >= 3` and `pyyaml` are required.
+`python3`, `nbformat` and `pyyaml` are required.
 
     ipyrmd [--to R|Rmd|ipynb] [--from R|Rmd|ipynb] [-y] [-o outfile] infile
 
@@ -28,7 +28,9 @@ By default the output filename and mode of conversion is determined from the inp
 Install
 -------
 
-Download the archive, extract it then run `python3 setup.py install --user`. This should install the `ipyrmd` script in your local bin directory (probably `~/.local/bin`).
+Download the archive, extract it then run `python3 setup.py install --user`. This should install the `ipyrmd` script in your local bin directory (probably `~/.local/bin`). 
+
+`pip` users could install it via `pip3 install --user git+https://github.com/chronitis/ipyrmd`.
 
 TODO
 ----
