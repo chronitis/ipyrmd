@@ -11,5 +11,5 @@ setup(name="ipyrmd",
       url="https://github.com/chronitis/ipyrmd",
       packages=["ipyrmd"],
       license="MIT",
-      requires=["ipython (>= 3.0)", "pyyaml"],
+      install_requires=["nbformat", "pyyaml"],
       scripts=["scripts/ipyrmd"])
