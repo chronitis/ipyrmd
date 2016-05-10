@@ -20,10 +20,8 @@ setup(name="ipyrmd",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Lanuage :: R",
         "Environment :: Console",
         "Framework :: IPython",
-        "Framework :: Jupyter",
         "Topic :: Scientific/Engineering",
         "Topic :: Utilities"
       ])
