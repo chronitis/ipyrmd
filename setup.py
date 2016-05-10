@@ -12,4 +12,18 @@ setup(name="ipyrmd",
       packages=["ipyrmd"],
       license="MIT",
       install_requires=["nbformat", "pyyaml"],
-      scripts=["scripts/ipyrmd"])
+      scripts=["scripts/ipyrmd"],
+      keywords="ipython jupyter irkernel rmarkdown ipynb",
+      classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research"
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Lanuage :: R",
+        "Environment :: Console",
+        "Framework :: IPython",
+        "Framework :: Jupyter",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Utilities"
+      ])
