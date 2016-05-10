@@ -17,7 +17,7 @@ setup(name="ipyrmd",
       classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
-        "Intended Audience :: Science/Research"
+        "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Lanuage :: R",
