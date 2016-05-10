@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from distutils.core import setup
+from setuptools import setup
 from ipyrmd import __version__
 
 setup(name="ipyrmd",
