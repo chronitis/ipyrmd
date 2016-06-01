@@ -222,7 +222,9 @@ def rmd_to_ipynb(infile, outfile):
                 meta = {}
 
                 if match.group(1):
-                    meta['Rmd_chunk_options'] = match.group(1).strip(" ,")
+                    chunk_opts = match.group(1).strip(" ,")
+                    if chunk_opts:
+                        meta['Rmd_chunk_options'] = chunk_opts
             else:
                 if re_code_inline.search(l):
                     print("Inline R code detected - treated as text")
