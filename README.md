@@ -28,7 +28,7 @@ By default the output filename and mode of conversion is determined from the inp
 Install
 -------
 
-Download the archive, extract it then run `python3 setup.py install --user`. This should install the `ipyrmd` script in your local bin directory (probably `~/.local/bin`). 
+Download the archive, extract it then run `python3 setup.py install --user`. This should install the `ipyrmd` script in your local bin directory (probably `~/.local/bin`).
 
 `pip` users could install it via `pip3 install --user git+https://github.com/chronitis/ipyrmd`.
 
@@ -47,3 +47,4 @@ History
  *  0.1 (2015-05-27) Initial release
  *  0.2 (2015-05-29) Re-structure as a python library providing script `ipyrmd`
  *  0.3 (2015-06-09) Add support for R files with markdown embedded in #' comments
+ *  0.4 (2016-06-01) Added a test suite and fixed a number of round-trip bugs
