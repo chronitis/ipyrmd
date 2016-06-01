@@ -38,12 +38,12 @@ class TestChunkOptions(RmdTest):
         self.assertIn("Rmd_chunk_options", cells[6].metadata)
         self.assertNotIn("Rmd_chunk_options", cells[7].metadata)
 
-        self.assertEquals(cells[1].metadata.Rmd_chunk_options, "foo=1")
-        self.assertEquals(cells[2].metadata.Rmd_chunk_options,
+        self.assertEqual(cells[1].metadata.Rmd_chunk_options, "foo=1")
+        self.assertEqual(cells[2].metadata.Rmd_chunk_options,
                           "eval=-(4:5), results='markup', tidy=TRUE")
-        self.assertEquals(cells[3].metadata.Rmd_chunk_options, "spaces=3")
-        self.assertEquals(cells[5].metadata.Rmd_chunk_options, "foo=5")
-        self.assertEquals(cells[6].metadata.Rmd_chunk_options, "foo=6")
+        self.assertEqual(cells[3].metadata.Rmd_chunk_options, "spaces=3")
+        self.assertEqual(cells[5].metadata.Rmd_chunk_options, "foo=5")
+        self.assertEqual(cells[6].metadata.Rmd_chunk_options, "foo=6")
 
     def test_opts_in_rmd(self):
         self.assertIn("```{r}\n# no-options", self.roundtrip)
@@ -89,10 +89,10 @@ class TestSpinChunkOptions(RmdTest):
         self.assertNotIn("Rmd_chunk_options", cells[4].metadata)
         self.assertNotIn("Rmd_chunk_options", cells[5].metadata)
 
-        self.assertEquals(cells[0].metadata.Rmd_chunk_options, "foo=0")
-        self.assertEquals(cells[1].metadata.Rmd_chunk_options, "foo=1, bar=2")
-        self.assertEquals(cells[2].metadata.Rmd_chunk_options, "foo=2")
-        self.assertEquals(cells[3].metadata.Rmd_chunk_options, "foo=3")
+        self.assertEqual(cells[0].metadata.Rmd_chunk_options, "foo=0")
+        self.assertEqual(cells[1].metadata.Rmd_chunk_options, "foo=1, bar=2")
+        self.assertEqual(cells[2].metadata.Rmd_chunk_options, "foo=2")
+        self.assertEqual(cells[3].metadata.Rmd_chunk_options, "foo=3")
 
     def test_opts_in_rmd(self):
         self.assertIn("#+ foo=0", self.roundtrip)
