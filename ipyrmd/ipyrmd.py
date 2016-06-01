@@ -32,6 +32,8 @@ def join_with_emptylines(text):
     Join a list of strings with \n\n (one empty line, to force separate
     markdown paragraphs, stripping any extra newlines.
     """
+    if len(text) == 0:
+        return ""
     if len(text) == 1:
         return text[0]
     result = text[0]
