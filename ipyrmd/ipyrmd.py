@@ -313,7 +313,7 @@ def spin_to_ipynb(infile, outfile):
                 state = MD
                 celldata = []
                 meta = {}
-                celldata.append(spinmatch.group(1).rstrip())
+                celldata.append(spinmatch.group(1).rstrip() + "\n")
             elif propmatch:
                 if any([c.strip() for c in celldata]):
                     add_cell(CODE, celldata, **meta)
