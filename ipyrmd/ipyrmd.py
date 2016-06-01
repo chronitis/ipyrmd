@@ -32,6 +32,8 @@ def join_with_emptylines(text):
     Join a list of strings with \n\n (one empty line, to force separate
     markdown paragraphs, stripping any extra newlines.
     """
+    if len(text) == 0:
+        return ""
     if len(text) == 1:
         return text[0]
     result = text[0]
@@ -95,15 +97,16 @@ def ipynb_to_rmd(infile, outfile, header=None):
     if header is not None:
         # yaml.dump generates "..." as a document end marker instead of the
         # "---" conventionally used by rmarkdown, so manually add that instead
-        text = maybe_newline(yaml.dump(header, explicit_start=True), "---")
+        text = maybe_newline(yaml.dump(header, explicit_start=True,
+                                       allow_unicode=True), "---")
         result.append(text)
 
     for cell in node.cells:
         if cell.cell_type == "markdown":
             result.append(maybe_join(cell.source))
         elif cell.cell_type == "code":
-            if 'Rmd_chunk_options' in cell.metadata:
-                start = "```{{r, {0}}}".format(cell.metadata["Rmd_chunk_options"])
+            if 'Rmd_chunk_options' in cell.metadata and cell.metadata['Rmd_chunk_options']:
+                start = "```{{r {0}}}".format(cell.metadata["Rmd_chunk_options"])
             else:
                 start = "```{r}"
 
@@ -130,7 +133,8 @@ def ipynb_to_spin(infile, outfile, header=None):
     if header is not None:
         # yaml.dump generates "..." as a document end marker instead of the
         # "---" conventionally used by rmarkdown, so manually add that instead
-        text = maybe_newline(yaml.dump(header, explicit_start=True), "---")
+        text = maybe_newline(yaml.dump(header, explicit_start=True,
+                                       allow_unicode=True), "---")
         text = prepend_lines(text, "#' ")
         result.append(text)
 
@@ -218,7 +222,9 @@ def rmd_to_ipynb(infile, outfile):
                 meta = {}
 
                 if match.group(1):
-                    meta['Rmd_chunk_options'] = match.group(1).strip(" ,")
+                    chunk_opts = match.group(1).strip(" ,")
+                    if chunk_opts:
+                        meta['Rmd_chunk_options'] = chunk_opts
             else:
                 if re_code_inline.search(l):
                     print("Inline R code detected - treated as text")
@@ -311,7 +317,7 @@ def spin_to_ipynb(infile, outfile):
                 state = MD
                 celldata = []
                 meta = {}
-                celldata.append(spinmatch.group(1).rstrip())
+                celldata.append(spinmatch.group(1).rstrip() + "\n")
             elif propmatch:
                 if any([c.strip() for c in celldata]):
                     add_cell(CODE, celldata, **meta)
