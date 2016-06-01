@@ -105,8 +105,8 @@ def ipynb_to_rmd(infile, outfile, header=None):
         if cell.cell_type == "markdown":
             result.append(maybe_join(cell.source))
         elif cell.cell_type == "code":
-            if 'Rmd_chunk_options' in cell.metadata:
-                start = "```{{r, {0}}}".format(cell.metadata["Rmd_chunk_options"])
+            if 'Rmd_chunk_options' in cell.metadata and cell.metadata['Rmd_chunk_options']:
+                start = "```{{r {0}}}".format(cell.metadata["Rmd_chunk_options"])
             else:
                 start = "```{r}"
 
