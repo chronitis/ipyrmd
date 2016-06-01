@@ -25,6 +25,7 @@ chunk_source = """```{r}
 # r-comma-noopts 7
 ```"""
 class TestChunkOptions(RmdTest):
+    source = chunk_source
     # TODO: decide on how case 4 should actually be handled
     def test_opts_in_ipynb(self):
         cells = self.ipynb.cells
