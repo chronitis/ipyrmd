@@ -61,3 +61,28 @@ class TestIpynbBasic(IpynbTest):
 
     def test_basic_ipynb(self):
         self.assertEqual(len(self.roundtrip.cells), len(self.cells))
+
+rmd_repeat = """markdown-0
+```{r}
+code-1
+```
+
+```{r}
+code-2
+```
+```{r}
+code-3
+```"""
+class TestRmdRepeat(RmdTest):
+    source = rmd_repeat
+    def test_repeated_rmd(self):
+        cells = self.ipynb.cells
+        self.assertEqual(len(cells), 4)
+        self.assertEqual(cells[0].cell_type, "markdown")
+        self.assertEqual(cells[1].cell_type, "code")
+        self.assertEqual(cells[2].cell_type, "code")
+        self.assertEqual(cells[3].cell_type, "code")
+        self.assertIn("markdown-0", cells[0].source)
+        self.assertIn("code-1", cells[1].source)
+        self.assertIn("code-2", cells[2].source)
+        self.assertIn("code-3", cells[3].source)
