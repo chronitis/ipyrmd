@@ -95,7 +95,8 @@ def ipynb_to_rmd(infile, outfile, header=None):
     if header is not None:
         # yaml.dump generates "..." as a document end marker instead of the
         # "---" conventionally used by rmarkdown, so manually add that instead
-        text = maybe_newline(yaml.dump(header, explicit_start=True), "---")
+        text = maybe_newline(yaml.dump(header, explicit_start=True,
+                                       allow_unicode=True), "---")
         result.append(text)
 
     for cell in node.cells:
@@ -130,7 +131,8 @@ def ipynb_to_spin(infile, outfile, header=None):
     if header is not None:
         # yaml.dump generates "..." as a document end marker instead of the
         # "---" conventionally used by rmarkdown, so manually add that instead
-        text = maybe_newline(yaml.dump(header, explicit_start=True), "---")
+        text = maybe_newline(yaml.dump(header, explicit_start=True,
+                                       allow_unicode=True), "---")
         text = prepend_lines(text, "#' ")
         result.append(text)
 

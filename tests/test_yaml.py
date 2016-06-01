@@ -38,7 +38,7 @@ class TestYAMLHeader(RmdTest):
         self.assertIn("foobar <foo@bar.tld>", self.roundtrip)
         self.assertIn("1970-01-01T00:00:00+0000", self.roundtrip)
         self.assertIn("£¼±å", self.roundtrip)
-        self.assertRegexpMatches(self.roundtrip, r"output:\s*html_document:\s*toc:\s*true")
+        self.assertRegexpMatches(self.roundtrip, r"output:[\s#']*html_document:[\s#']*toc:[\s#']*true")
         self.assertIn("1+1", self.roundtrip)
         self.assertIn("lorem ipsum", self.roundtrip)
 
