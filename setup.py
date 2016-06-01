@@ -3,9 +3,13 @@
 from setuptools import setup
 from ipyrmd import __version__
 
+with open("README.md") as f:
+    long_desc = f.read()
+
 setup(name="ipyrmd",
       version=__version__,
       description="Convert between IPython/Jupyter notebooks and RMarkdown",
+      long_description=long_desc,
       author="Gordon Ball",
       author_email="gordon@chronitis.net",
       url="https://github.com/chronitis/ipyrmd",
