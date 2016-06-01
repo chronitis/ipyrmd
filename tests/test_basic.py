@@ -22,12 +22,16 @@ class TestRmdBasic(RmdTest):
         cells = self.ipynb.cells
         self.assertEqual(len(cells), 4)
         self.assertEqual(cells[0].cell_type, "markdown")
+        self.assertIn("markdown-0-0\nmarkdown-0-1", cells[0].source)
         self.assertEqual(cells[1].cell_type, "code")
+        self.assertIn("code-1", cells[1].source)
         self.assertEqual(cells[2].cell_type, "markdown")
+        self.assertIn("markdown-2-0\nmarkdown-2-1", cells[2].source)
         self.assertEqual(cells[3].cell_type, "code")
+        self.assertIn("code-3-0\ncode-3-1\ncode-3-2", cells[3].source)
 
     def test_basic_rmd(self):
-        self.assertEqual(self.roundtrip, rmd_basic)
+        self.assertEqual(self.roundtrip, self.source)
 
 spin_basic = """#' markdown-0-0
 #' markdown-0-1
@@ -41,19 +45,9 @@ code-3-0
 code-3-1
 code-3-2
 """
-class TestSpinBasic(RmdTest):
+class TestSpinBasic(TestRmdBasic):
     source = spin_basic
     use_rmd = False
-    def test_basic_ipynb(self):
-        cells = self.ipynb.cells
-        self.assertEqual(len(cells), 4)
-        self.assertEqual(cells[0].cell_type, "markdown")
-        self.assertEqual(cells[1].cell_type, "code")
-        self.assertEqual(cells[2].cell_type, "markdown")
-        self.assertEqual(cells[3].cell_type, "code")
-
-    def test_basic_rmd(self):
-        self.assertEqual(self.roundtrip, spin_basic)
 
 class TestIpynbBasic(IpynbTest):
     cells = [
