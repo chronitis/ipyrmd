@@ -48,3 +48,4 @@ History
  *  0.2 (2015-05-29) Re-structure as a python library providing script `ipyrmd`
  *  0.3 (2015-06-09) Add support for R files with markdown embedded in #' comments
  *  0.4 (2016-06-01) Added a test suite and fixed a number of round-trip bugs
+ *  0.4.1 (2016-06-29) Fix missing README causing setup errors (ipyrmd#3)
