@@ -24,7 +24,7 @@ maybe_join = lambda x: x if isinstance(x, str) else "".join(x)
 
 # join two blocks of text, adding a newline if there is not already
 # a leading or trailing one
-maybe_newline = lambda x, y: x+y if x.endswith("\n") or y.startswith("\n") else x+"\n"+y
+maybe_newline = lambda x, y: x + y if x.endswith("\n") or y.startswith("\n") else x + "\n" + y
 
 
 def join_with_emptylines(text):
@@ -34,7 +34,7 @@ def join_with_emptylines(text):
     """
     if len(text) == 0:
         return ""
-    if len(text) == 1:
+    elif len(text) == 1:
         return text[0]
     result = text[0]
     for t in text[1:]:
@@ -46,7 +46,7 @@ def prepend_lines(text, prefix):
     """
     Insert a prefix at the beginning of each line, eg #'
     """
-    return "\n".join([prefix+t for t in text.split("\n")])
+    return "\n".join([prefix + t for t in text.split("\n")])
 
 unprepend_line = lambda x, p: x[len(p):] if x.startswith(p) else x
 
@@ -175,14 +175,14 @@ def rmd_to_ipynb(infile, outfile):
     re_yaml_delim = re.compile(r"^---\s*$")
     delim_lines = [i for i, l in enumerate(rmdlines) if re_yaml_delim.match(l)]
     if len(delim_lines) >= 2 and delim_lines[1] - delim_lines[0] > 1:
-        yamltext = '\n'.join(rmdlines[delim_lines[0]+1:delim_lines[1]])
+        yamltext = '\n'.join(rmdlines[delim_lines[0] + 1:delim_lines[1]])
         try:
             header = yaml.load(yamltext)
             node.metadata["Rmd_header"] = header
         except yaml.YAMLError as e:
             print("Error reading document metadata block: {0}".format(e))
             print("Trying to continue without header")
-        rmdlines = rmdlines[:delim_lines[0]] + rmdlines[delim_lines[1]+1:]
+        rmdlines = rmdlines[:delim_lines[0]] + rmdlines[delim_lines[1] + 1:]
 
     # the behaviour of rmarkdown appears to be that a code block does not
     # have to have matching numbers of start and end `s - just >=3
@@ -265,7 +265,7 @@ def spin_to_ipynb(infile, outfile):
     delim_lines = [i for i, l in enumerate(lines) if re_yaml_delim.match(l)]
 
     if len(delim_lines) >= 2 and delim_lines[1] - delim_lines[0] > 1:
-        yamltext = '\n'.join(lines[delim_lines[0]+1:delim_lines[1]])
+        yamltext = '\n'.join(lines[delim_lines[0] + 1:delim_lines[1]])
         yamltext = unprepend_lines(yamltext, "#' ")
         try:
             header = yaml.load(yamltext)
@@ -273,7 +273,7 @@ def spin_to_ipynb(infile, outfile):
         except yaml.YAMLError as e:
             print("Error reading document metadata block: {0}".format(e))
             print("Trying to continue without header")
-        lines = lines[:delim_lines[0]] + lines[delim_lines[1]+1:]
+        lines = lines[:delim_lines[0]] + lines[delim_lines[1] + 1:]
 
     MD, CODE = range(2)
 
@@ -325,7 +325,7 @@ def spin_to_ipynb(infile, outfile):
                 meta = {}
                 meta['Rmd_chunk_options'] = propmatch.group(1).strip(" ,")
             else:
-                celldata.append(l.rstrip()+"\n")
+                celldata.append(l.rstrip() + "\n")
 
     if any([c.strip() for c in celldata]):
         add_cell(state, celldata, **meta)
