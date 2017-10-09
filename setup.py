@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 
+import os, re
 from setuptools import setup
-from ipyrmd import __version__
+
+__version__ = None
+
+with open(os.path.join(os.path.dirname(__file__), "ipyrmd", "__init__.py")) as f:
+    for line in f.readlines():
+        if line.startswith("__version__"):
+            exec(line)
 
 with open("README.md") as f:
     long_desc = f.read()
